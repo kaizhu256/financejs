@@ -2383,7 +2383,7 @@
       arr[ii] = arr[ii] * arr[ii] + arr[1 + ii] * arr[1 + ii]; arr[1 + ii] = 0;}
     return arr;};
   my.mathFitCos = function(arr, yy) {
-    var aa, cc, hh1, hh2, hh3, ii1, ii2, inv, ll, pp, ss, ww, yy1, yy2; ll = arr.length;
+    var aa, cc, hh1, hh2, hh3, ii1, tt, inv, ll, pp, ss, ww, yy1, yy2; ll = arr.length;
     //// fft
     my.mathFftReal(my.mathItp2(arr, yy), -1);
     //// get initial values
@@ -2396,22 +2396,25 @@
     inv = 1 / aa;
     for(ii1 = ll >> 1; ii1 > 1; ii1 >>= 1) {
       hh1 = hh2 = hh3 = 0; yy1 = yy2 = 0;
-      for(ii2 = 0; ii2 < ll; ii2 += 1) {
+      for(tt = 0; tt < ll; tt += 1) {
         //// pp ww - nonlinear jacobian
-        //// ss  ssi  | dp = cs  - ys /a
-        //// ssi ssii | dw = csi - ysi/a
-        cc = Math.cos(ss = pp + ((ii2 * ww) % PI2)); ss = Math.sin(ss);
-        cc = ss * (cc - arr[ii2] * inv); yy1 += cc; yy2 += cc * ii2;
-        ss *= ss; hh1 += ss; hh2 += ss * ii2; hh3 += ss * ii2 * ii2;}
+        //// hh1=ss  hh2=sst  | dp = cs  - ys /a
+        //// hh2=sst hh3=sstt | dw = cst - yst/a
+        ////
+        //// dp =  hh3= sstt -hh2=-sst | cs  - ys /a
+        //// dw = -hh2=-sst   hh1= ss  | cst - yst/a
+        cc = Math.cos(ss = pp + ((tt * ww) % PI2)); ss = Math.sin(ss);
+        cc = ss * (cc - arr[tt] * inv); yy1 += cc; yy2 += cc * tt;
+        ss *= ss; hh1 += ss; hh2 += ss * tt; hh3 += ss * tt * tt;}
       //// solve linear equation
       cc = 1 / (hh1 * hh3 - hh2 * hh2);
       pp += cc * (hh3 * yy1 - hh2 * yy2); pp %= PI2; ww += cc * (-hh2 * yy1 + hh1 * yy2);}
     for(ii1 = ll >> 1; ii1 > 1; ii1 >>= 1) {
       yy1 = yy2 = 0;
-      for(ii2 = 0; ii2 < ll; ii2 += 1) {
+      for(tt = 0; tt < ll; tt += 1) {
         //// da = (sum(yc - acc)) / sum(cc)
-        cc = Math.cos(ss = pp + ((ii2 * ww) % PI2)); ss = Math.sin(ss);
-        yy1 += arr[ii2] * cc; yy2 += cc * cc;}
+        cc = Math.cos(ss = pp + ((tt * ww) % PI2)); ss = Math.sin(ss);
+        yy1 += arr[tt] * cc; yy2 += cc * cc;}
       aa += (yy1 - aa * yy2) / yy2;}
     return [aa, ww, pp];};
   my.mathInv = function(m) {
@@ -2444,8 +2447,8 @@
   my.mathTest = function(cnv) {
     var aa, awp, bb, cc, dd, ee, ff, yy;
     aa = [1.1,3.2,2.3,4.4,-1.5,-3.6,-2.7,-4.8,1.8,3.7,2.6,4.5,-1.4,-3.3,-2.2,-4.1];
-    
-    
+
+
     my.Array2(aa, 1).center();
     bb = aa.slice(); my.mathItp2(bb, aa, 15); my.Array2(aa, 1).center();
     cc = my.mathDftReal(aa.slice(), -1);
@@ -2456,7 +2459,7 @@
       [
         bb, aa, ee,
         my.mathFftHist(cc), my.mathFftHist(dd),
-        
+
         function(ii) {return awp[0] * Math.cos(awp[1] * ii + awp[2]);},
         function(ii) {return awp[0] * Math.cos(awp[1] * ii + awp[2]);}]);
     yy.mul(yy.sink(1).max1(yy).inv());
