@@ -2403,19 +2403,33 @@
         ////
         //// dp =  hh3= sstt -hh2=-sst | cs  - ys /a
         //// dw = -hh2=-sst   hh1= ss  | cst - yst/a
-        cc = Math.cos(ss = pp + ((tt * ww) % PI2)); ss = Math.sin(ss);
-        cc = ss * (cc - arr[tt] * inv); yy1 += cc; yy2 += cc * tt;
-        ss *= ss; hh1 += ss; hh2 += ss * tt; hh3 += ss * tt * tt;}
+        cc = Math.cos(ss = pp + ((tt * ww) % PI2));
+        ss = Math.sin(ss);
+        cc = ss * (cc - arr[tt] * inv);
+        yy1 += cc;
+        yy2 += cc * tt;
+        ss *= ss;
+        hh1 += ss;
+        hh2 += ss * tt;
+        hh3 += ss * tt * tt;
+      }
       //// solve linear equation
       cc = 1 / (hh1 * hh3 - hh2 * hh2);
-      pp += cc * (hh3 * yy1 - hh2 * yy2); pp %= PI2; ww += cc * (-hh2 * yy1 + hh1 * yy2);}
+      pp += cc * (hh3 * yy1 - hh2 * yy2);
+      pp %= PI2;
+      ww += cc * (-hh2 * yy1 + hh1 * yy2);
+    }
     for(ii1 = ll >> 1; ii1 > 1; ii1 >>= 1) {
       yy1 = yy2 = 0;
       for(tt = 0; tt < ll; tt += 1) {
         //// da = (sum(yc - acc)) / sum(cc)
-        cc = Math.cos(ss = pp + ((tt * ww) % PI2)); ss = Math.sin(ss);
-        yy1 += arr[tt] * cc; yy2 += cc * cc;}
-      aa += (yy1 - aa * yy2) / yy2;}
+        cc = Math.cos(ss = pp + ((tt * ww) % PI2));
+        ss = Math.sin(ss);
+        yy1 += arr[tt] * cc;
+        yy2 += cc * cc;
+      }
+      aa += (yy1 - aa * yy2) / yy2;
+    }
     return [aa, ww, pp];};
   my.mathInv = function(m) {
     var d;
