@@ -2390,8 +2390,14 @@
     aa = 0;
     for(ii1 = 2; ii1 < yy.length >> 1; ii1 += 2) {
       pp = yy[ii1] * yy[ii1] + yy[1 + ii1] * yy[1 + ii1];
-      if(pp > aa) {aa = pp; ww = ii1;}}
-    aa = 2 * Math.sqrt(aa) / yy.length; pp = Math.atan2(yy[1 + ww], yy[ww]); ww *= PI1 / ll;
+      if(pp > aa) {
+        aa = pp;
+        ww = ii1;
+      }
+    }
+    aa = 2 * Math.sqrt(aa) / yy.length;
+    pp = Math.atan2(yy[1 + ww], yy[ww]);
+    ww *= PI1 / ll;
     //// newton lsq - pp, ww
     inv = 1 / aa;
     for(ii1 = ll >> 1; ii1 > 1; ii1 >>= 1) {
@@ -2403,15 +2409,13 @@
         ////
         //// dp =  hh3= sstt -hh2=-sst | cs  - ys /a
         //// dw = -hh2=-sst   hh1= ss  | cst - yst/a
-        cc = Math.cos(ss = pp + ((tt * ww) % PI2));
-        ss = Math.sin(ss);
-        cc = ss * (cc - arr[tt] * inv);
-        yy1 += cc;
-        yy2 += cc * tt;
-        ss *= ss;
-        hh1 += ss;
-        hh2 += ss * tt;
-        hh3 += ss * tt * tt;
+        cc = Math.cos(pp + ((tt * ww) % PI2));
+        ss = Math.sin(pp + ((tt * ww) % PI2));
+        yy1 += ss * (cc - arr[tt] * inv);
+        yy2 += ss * (cc - arr[tt] * inv) * tt;
+        hh1 += ss * ss;
+        hh2 += ss * ss * tt;
+        hh3 += ss * ss * tt * tt;
       }
       //// solve linear equation
       cc = 1 / (hh1 * hh3 - hh2 * hh2);
